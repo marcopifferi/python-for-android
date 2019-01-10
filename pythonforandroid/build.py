@@ -248,13 +248,17 @@ class Context(object):
                     self.android_api),
                 instructions='You probably want to build with --arch=armeabi-v7a instead')
 
+        info('Checking SDK: {}'.format(sdk_dir))
         if exists(join(sdk_dir, 'tools', 'bin', 'avdmanager')):
+            info('valid adv manager:')
             avdmanager = sh.Command(join(sdk_dir, 'tools', 'bin', 'avdmanager'))
             targets = avdmanager('list', 'target').stdout.decode('utf-8').split('\n')
         elif exists(join(sdk_dir, 'tools', 'android')):
+            info('valid android:')
             android = sh.Command(join(sdk_dir, 'tools', 'android'))
             targets = android('list').stdout.decode('utf-8').split('\n')
         else:
+            info('Could not find `android` or `sdkmanager`')
             raise BuildInterruptingException(
                 'Could not find `android` or `sdkmanager` binaries in Android SDK',
                 instructions='Make sure the path to the Android SDK is correct')
